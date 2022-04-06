@@ -3,14 +3,19 @@ package com.example.api.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.api.model.Movie;
+import com.example.api.repository.MovieRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,34 +30,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("catalog")
 public class MovieController
 {
+    @Autowired
+    private MovieRepository movieRepository;
 
     @GetMapping("/movies")
     public String getMovies(Model model){
 
-        Movie movie = new Movie();
-        movie.setDescription( "Film d'action" );
-        movie.setTitle( "Die Hard" );
-        movie.setDuration( 120 );
-
-        Movie movie2 = new Movie();
-        movie2.setDescription( "Film fantastique" );
-        movie2.setTitle( "Harry Potter" );
-        movie2.setDuration( 180 );
-
-        Movie movie3 = new Movie();
-        movie3.setDescription( "Film thriller" );
-        movie3.setTitle( "Usual Suspect" );
-        movie3.setDuration( 100 );
-
-        List<Movie> movies = new ArrayList<>();
-        movies.add(movie);
-        movies.add(movie2);
-        movies.add(movie3);
-
+        List<Movie> movies = movieRepository.findAll();
         model.addAttribute( "movies", movies );
 
         return "home";
     }
+
 
     @GetMapping("/about")
     public String getAboutPage(){
@@ -60,7 +49,15 @@ public class MovieController
     }
 
     @PostMapping("/movie")
-    public String saveMovie(){
+    public String saveMovie(@RequestParam String title , @RequestParam Integer duration , @RequestParam String desc ){
+        Movie movie3 = new Movie();
+
+        movie3.setDuration( duration );
+        movie3.setTitle( title );
+        movie3.setDescription( desc );
+
+       movieRepository.save( movie3 );
+
 
         return "about";
     }
