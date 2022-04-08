@@ -24,10 +24,10 @@ public class Movie
 {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title_t")
+    @Column(name = "title")
     private String title;
 
     @NonNull
